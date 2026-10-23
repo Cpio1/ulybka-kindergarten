@@ -1,0 +1,147 @@
+@import "tailwindcss";
+
+/* Laptop screens with little height (1280×720, 1366×768, 1440×900 with browser chrome): tighter vertical rhythm. */
+@custom-variant short (@media (min-width: 64rem) and (max-height: 820px));
+
+@theme {
+  --color-milk: #fffdf5;
+  --color-milk-deep: #f7f1df;
+  --color-paper: #ffffff;
+  --color-sun: #ffd65a;
+  --color-sun-deep: #f0b92e;
+  --color-sun-soft: #fff3c9;
+  --color-sky: #a9ddf3;
+  --color-sky-deep: #286b90;
+  --color-sky-soft: #e4f4fb;
+  --color-coral: #ffaf9e;
+  --color-coral-soft: #ffe6df;
+  --color-ink: #29384c;
+  --color-ink-soft: #586579;
+  --color-line: #eee6cf;
+  --color-whatsapp: #25d366;
+  --color-whatsapp-deep: #0f7a41;
+
+  --font-display: var(--font-nunito), ui-rounded, system-ui, sans-serif;
+  --font-sans: var(--font-golos), system-ui, sans-serif;
+
+  --shadow-soft: 0 18px 40px -24px rgb(41 56 76 / 0.3);
+  --shadow-card: 0 14px 34px -22px rgb(41 56 76 / 0.32), 0 2px 6px -3px rgb(41 56 76 / 0.08);
+  --shadow-lift: 0 24px 48px -26px rgb(41 56 76 / 0.42), 0 4px 10px -4px rgb(41 56 76 / 0.08);
+  --shadow-sun: 0 12px 24px -12px rgb(240 185 46 / 0.75);
+  --shadow-sky: 0 12px 24px -12px rgb(40 107 144 / 0.55);
+
+  --animate-float: float 7s ease-in-out infinite;
+  --animate-float-slow: float 11s ease-in-out infinite;
+  --animate-spin-slow: spin-slow 60s linear infinite;
+
+  @keyframes float {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0) rotate(0deg);
+    }
+    50% {
+      transform: translate3d(0, -8px, 0) rotate(4deg);
+    }
+  }
+  @keyframes spin-slow {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+}
+
+@layer base {
+  html {
+    /* fixed header height + a little air, so anchored sections are never hidden under it */
+    scroll-padding-top: 4.5rem;
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+  }
+  @media (min-width: 64rem) {
+    html {
+      scroll-padding-top: 5rem;
+    }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+  body {
+    background: var(--color-milk);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: clip;
+  }
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    text-wrap: balance;
+    overflow-wrap: break-word;
+  }
+  p {
+    text-wrap: pretty;
+  }
+  img,
+  svg,
+  video {
+    max-width: 100%;
+  }
+  ::selection {
+    background: var(--color-sun-soft);
+  }
+  :focus-visible {
+    outline: 2.5px solid var(--color-sky-deep);
+    outline-offset: 3px;
+    border-radius: 10px;
+  }
+}
+
+/* Server HTML holds both compositions; until hydration the media query shows the right one. */
+.website-root {
+  display: none;
+}
+@media (min-width: 64rem) {
+  .website-root {
+    display: block;
+  }
+  .mobile-root {
+    display: none;
+  }
+}
+
+@utility glass {
+  background: rgb(255 253 245 / 0.84);
+  backdrop-filter: blur(14px) saturate(1.4);
+  -webkit-backdrop-filter: blur(14px) saturate(1.4);
+}
+
+/* Organic silhouettes for photos and panels. */
+@utility blob-a {
+  border-radius: 62% 38% 46% 54% / 48% 52% 48% 52%;
+}
+@utility blob-b {
+  border-radius: 42% 58% 55% 45% / 55% 45% 55% 45%;
+}
+@utility pebble {
+  border-radius: 2.5rem 2.5rem 2.5rem 0.9rem;
+}
+
+/* Quiet dotted texture used as a background accent. */
+@utility dots {
+  background-image: radial-gradient(currentColor 1.3px, transparent 1.5px);
+  background-size: 15px 15px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
