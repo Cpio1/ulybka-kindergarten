@@ -5,7 +5,7 @@ import { ArrowDown, MapPin } from "lucide-react";
 import { groups, links } from "@/shared/data/kindergarten";
 import { useLang } from "@/shared/i18n/LanguageProvider";
 import type { Media, VideoMedia } from "@/shared/lib/media";
-import { HERO_SIZES } from "@/shared/lib/media-sizes";
+import { HERO_SIZES, frameRatio } from "@/shared/lib/media-sizes";
 import { scrollToSection } from "@/shared/lib/scroll";
 import { WhatsAppIcon } from "@/shared/ui/BrandIcons";
 import { Buddy, Cloud, Cube, GroupMotif, Sparkle, Star, Sun } from "@/shared/ui/Decor";
@@ -24,6 +24,8 @@ const rise = (delay: number) => ({
 export function Hero({ media, video }: { media: Media | null; video: VideoMedia | null }) {
   const { t } = useLang();
   const h = t.hero;
+  // a real photo keeps its own proportions in a gently rounded frame; the illustration keeps the blob
+  const shape = media ? "frame-soft" : "blob-a";
 
   return (
     <section id="home" data-section className="relative overflow-hidden pt-28 pb-14 short:pt-24 short:pb-10 2xl:pt-32 2xl:pb-20">
@@ -88,13 +90,13 @@ export function Hero({ media, video }: { media: Media | null; video: VideoMedia 
         </div>
 
         <m.div
-          initial={{ opacity: 0, scale: 0.96 }}
-          animate={{ opacity: 1, scale: 1 }}
+          initial={{ scale: 0.96 }}
+          animate={{ scale: 1 }}
           transition={{ duration: 0.8, delay: 0.1, ease }}
           className="relative mx-auto w-full max-w-[31rem] short:max-w-[27rem] 2xl:max-w-[35rem]"
         >
-          <div aria-hidden="true" className="absolute inset-0 translate-x-4 translate-y-5 blob-a bg-sky" />
-          <div className="relative aspect-[1/0.94] overflow-hidden blob-a border-[6px] border-paper bg-sky-soft shadow-lift">
+          <div aria-hidden="true" className={`absolute inset-0 translate-x-4 translate-y-5 ${shape} bg-sky`} />
+          <div className={`relative overflow-hidden ${shape} border-[6px] border-paper bg-sky-soft shadow-lift`} style={{ aspectRatio: frameRatio(media, 1 / 0.94) }}>
             <MediaView media={media} alt={h.photoAlt} sizes={HERO_SIZES} priority placeholder={h.placeholder} />
           </div>
 
@@ -104,16 +106,16 @@ export function Hero({ media, video }: { media: Media | null; video: VideoMedia 
             </div>
           )}
 
-          {/* figures: few, small, and kept inside the frame's bounds */}
-          <Sun face className="absolute -top-5 right-[6%] w-[19%] animate-float-slow" />
-          <Cloud className="absolute top-[14%] -left-[9%] w-[26%] animate-float" />
-          <Star tone="coral" className="absolute bottom-[30%] -left-[6%] w-[11%] animate-float-slow" />
-          <Cube tone="sun" className="absolute -bottom-3 right-[22%] w-[13%] animate-float" />
-          <Buddy shape="triangle" tone="sky" className="absolute -right-[5%] top-[38%] w-[13%] animate-float-slow" />
-          <Sparkle className="absolute top-[4%] left-[22%] w-5" color="#A9DDF3" />
+          {/* figures: few, small, and sitting on the frame's edges — never over faces in the photo */}
+          <Sun face className="absolute -top-10 right-[3%] w-[16%] animate-float-slow" />
+          <Cloud className="absolute -top-8 -left-[8%] w-[24%] animate-float" />
+          <Star tone="coral" className="absolute bottom-[14%] -left-[7%] w-[9%] animate-float-slow" />
+          <Cube tone="sun" className="absolute -bottom-6 right-[14%] w-[11%] animate-float" />
+          <Buddy shape="triangle" tone="sky" className="absolute top-[42%] -right-[7%] w-[11%] animate-float-slow" />
+          <Sparkle className="absolute -top-4 left-[36%] w-5" color="#A9DDF3" />
 
           {/* the four groups, as a little badge */}
-          <div className="glass absolute -bottom-4 left-[2%] flex items-center gap-2.5 rounded-2xl border border-line py-2 pr-4 pl-2 shadow-card">
+          <div className="glass absolute -bottom-6 left-[3%] flex items-center gap-2.5 rounded-2xl border border-line py-2 pr-4 pl-2 shadow-card">
             <span className="flex -space-x-2" aria-hidden="true">
               {groups.map((g) => (
                 <span key={g.id} className="grid h-8 w-8 place-items-center rounded-full border-2 border-paper bg-milk">

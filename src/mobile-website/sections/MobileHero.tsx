@@ -5,7 +5,7 @@ import { ArrowDown, MapPin } from "lucide-react";
 import { links } from "@/shared/data/kindergarten";
 import { useLang } from "@/shared/i18n/LanguageProvider";
 import type { Media } from "@/shared/lib/media";
-import { HERO_SIZES } from "@/shared/lib/media-sizes";
+import { HERO_SIZES, frameRatio } from "@/shared/lib/media-sizes";
 import { scrollToSection } from "@/shared/lib/scroll";
 import { WhatsAppIcon } from "@/shared/ui/BrandIcons";
 import { Buddy, Cloud, Star, Sun } from "@/shared/ui/Decor";
@@ -24,6 +24,7 @@ const rise = (delay: number) => ({
 export function MobileHero({ media }: { media: Media | null }) {
   const { t } = useLang();
   const h = t.hero;
+  const shape = media ? "frame-soft" : "blob-a";
   return (
     <section id="home" data-section className="relative overflow-hidden pt-20 pb-8">
       <div aria-hidden="true" className="pointer-events-none absolute -top-24 -right-28 h-72 w-72 blob-b bg-sky-soft" />
@@ -66,19 +67,20 @@ export function MobileHero({ media }: { media: Media | null }) {
         </m.div>
 
         <m.div
-          initial={{ opacity: 0, scale: 0.97 }}
-          animate={{ opacity: 1, scale: 1 }}
+          initial={{ scale: 0.97 }}
+          animate={{ scale: 1 }}
           transition={{ duration: 0.6, delay: 0.15, ease }}
-          className="relative mx-auto mt-8 w-[80%] max-w-[20rem]"
+          className={`relative mx-auto mt-8 ${media ? "w-[96%]" : "w-[80%] max-w-[20rem]"}`}
         >
-          <div aria-hidden="true" className="absolute inset-0 translate-x-2.5 translate-y-3 blob-a bg-sky" />
-          <div className="relative aspect-[1/0.92] overflow-hidden blob-a border-4 border-paper bg-sky-soft shadow-lift">
+          <div aria-hidden="true" className={`absolute inset-0 translate-x-2 translate-y-2.5 ${shape} bg-sky`} />
+          <div className={`relative overflow-hidden ${shape} border-4 border-paper bg-sky-soft shadow-lift`} style={{ aspectRatio: frameRatio(media, 1 / 0.92) }}>
             <MediaView media={media} alt={h.photoAlt} sizes={HERO_SIZES} priority placeholder={h.placeholder} />
           </div>
-          <Sun face className="absolute -top-4 right-[4%] w-[20%] animate-float-slow" />
-          <Cloud className="absolute top-[18%] -left-[10%] w-[26%] animate-float" />
-          <Star tone="coral" className="absolute bottom-[8%] -left-[6%] w-[12%]" />
-          <Buddy shape="square" tone="sun" className="absolute -right-[6%] bottom-[16%] w-[14%] animate-float-slow" />
+          {/* figures sit on the frame's edges, off the faces */}
+          <Sun face className="absolute -top-7 right-[3%] w-[15%] animate-float-slow" />
+          <Cloud className="absolute -top-6 -left-[3%] w-[21%] animate-float" />
+          <Star tone="coral" className="absolute -bottom-4 left-[7%] w-[9%]" />
+          <Buddy shape="square" tone="sun" className="absolute -right-[2%] -bottom-4 w-[11%] animate-float-slow" />
         </m.div>
 
         <m.ul {...rise(0.2)} className="mt-7 grid grid-cols-3 divide-x divide-line rounded-2xl border border-line bg-paper py-3 shadow-card">

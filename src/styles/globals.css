@@ -126,6 +126,10 @@
 @utility blob-b {
   border-radius: 42% 58% 55% 45% / 55% 45% 55% 45%;
 }
+/* Gentle organic frame for real photos: only the corners round off, so edge-to-edge group shots keep every face. */
+@utility frame-soft {
+  border-radius: 2.25rem 3.75rem 2.25rem 3.75rem / 2.25rem 3rem 2.25rem 3rem;
+}
 @utility pebble {
   border-radius: 2.5rem 2.5rem 2.5rem 0.9rem;
 }

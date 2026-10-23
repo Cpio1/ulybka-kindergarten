@@ -2,7 +2,7 @@
 
 import { useLang } from "@/shared/i18n/LanguageProvider";
 import type { Media } from "@/shared/lib/media";
-import { ABOUT_SIZES } from "@/shared/lib/media-sizes";
+import { ABOUT_SIZES, frameRatio } from "@/shared/lib/media-sizes";
 import { Cube, Star } from "@/shared/ui/Decor";
 import { MediaView } from "@/shared/ui/MediaView";
 import { Reveal } from "@/shared/ui/Reveal";
@@ -17,10 +17,10 @@ export function MobileAbout({ media }: { media: Media | null }) {
       <Container>
         <Heading eyebrow={a.eyebrow} title={a.title} />
         <Reveal y={10} className="relative mt-5">
-          <div className="relative aspect-[16/11] overflow-hidden pebble border-4 border-paper bg-sky-soft shadow-card">
+          <div className="relative overflow-hidden pebble border-4 border-paper bg-sky-soft shadow-card" style={{ aspectRatio: frameRatio(media, 16 / 11) }}>
             <MediaView media={media} alt={a.photoAlt} sizes={ABOUT_SIZES} placeholder={a.placeholder} />
           </div>
-          <Star face className="absolute -top-4 right-3 w-11 animate-float-slow" />
+          <Star face className="absolute -top-5 right-2 w-10 animate-float-slow" />
           <Cube tone="coral" className="absolute -bottom-3 left-3 w-9" />
         </Reveal>
         <Reveal y={10} className="mt-5 space-y-2.5 text-[0.95rem] leading-relaxed text-ink-soft">

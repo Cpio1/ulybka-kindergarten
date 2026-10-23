@@ -4,6 +4,7 @@ import { Expand, Play } from "lucide-react";
 import Image from "next/image";
 import { useLang } from "@/shared/i18n/LanguageProvider";
 import type { Media } from "@/shared/lib/media";
+import { mediaRatio } from "@/shared/lib/media-sizes";
 import { MediaPlaceholder, useMounted } from "./MediaView";
 
 type Props = {
@@ -12,13 +13,20 @@ type Props = {
   sizes: string;
   onOpen: (index: number) => void;
   className?: string;
+  /** width ÷ height of the cell; a photo of a clearly different shape is fitted whole instead of cropped */
+  cellRatio?: number;
 };
 
-/** A gallery cell: lazy photo (or video poster) that opens the lightbox. Never taller than its grid cell. */
-export function GalleryTile({ item, index, sizes, onOpen, className = "" }: Props) {
+/**
+ * A gallery cell: lazy photo (or video poster) that opens the lightbox. Never taller than its grid cell.
+ * A photo close to the cell's shape fills it (a few percent trimmed at most); one of a clearly different
+ * shape (e.g. portrait in a landscape cell) is shown whole over a soft blurred copy of itself.
+ */
+export function GalleryTile({ item, index, sizes, onOpen, className = "", cellRatio }: Props) {
   const { t } = useLang();
   const cover = item.kind === "image" ? item : item.poster;
   const mounted = useMounted();
+  const fill = !cellRatio || Math.abs(Math.log(mediaRatio(item) / cellRatio)) < 0.18;
   return (
     <button
       type="button"
@@ -27,14 +35,20 @@ export function GalleryTile({ item, index, sizes, onOpen, className = "" }: Prop
       className={`group relative block h-full w-full overflow-hidden bg-milk-deep ${className}`}
     >
       {cover ? (
-        <Image
-          src={cover.src}
-          alt={t.gallery.photoAlt(index + 1)}
-          fill
-          sizes={sizes}
-          loading="lazy"
-          className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.05]"
-        />
+        <>
+          {!fill && (
+            // same src + sizes as the photo itself, so the backdrop costs no extra download
+            <Image src={cover.src} alt="" aria-hidden="true" fill sizes={sizes} loading="lazy" className="scale-110 object-cover opacity-70 blur-xl" />
+          )}
+          <Image
+            src={cover.src}
+            alt={t.gallery.photoAlt(index + 1)}
+            fill
+            sizes={sizes}
+            loading="lazy"
+            className={`${fill ? "object-cover" : "object-contain"} transition-transform duration-700 ease-out group-hover:scale-[1.05]`}
+          />
+        </>
       ) : (
         <>
           <MediaPlaceholder compact />

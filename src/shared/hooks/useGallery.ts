@@ -2,6 +2,7 @@
 
 import { useCallback, useState } from "react";
 import type { Media } from "@/shared/lib/media";
+import { mediaRatio } from "@/shared/lib/media-sizes";
 
 /** Collapsed/expanded grid + which item is open in the lightbox. */
 export function useGallery(items: Media[], initial: number) {
@@ -27,19 +28,12 @@ export function useGallery(items: Media[], initial: number) {
   };
 }
 
-/** Width ÷ height of a gallery item (a video with neither poster nor readable size gets a portrait default). */
-export function mediaRatio(item: Media) {
-  if (item.kind === "image") return item.width / item.height;
-  if (item.poster) return item.poster.width / item.poster.height;
-  return item.size ? item.size.width / item.size.height : 4 / 5;
-}
-
 export type GalleryRow = { cells: { item: Media; index: number; ratio: number }[]; spacer: number };
 
 /**
  * Justified rows: items in a row get `flex-grow` equal to their aspect ratio, so the whole row
  * shares one height and every photo keeps its proportions — no cropping, reading order kept.
- * A short last row is padded (`spacer`, split on both sides) so it doesn't blow up in height.
+ * A short last row is padded (`spacer`) so it doesn't blow up in height.
  */
 export function toRows(items: Media[], perRow: number, minRowRatio: number): GalleryRow[] {
   const rows: GalleryRow[] = [];

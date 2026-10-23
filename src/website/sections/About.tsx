@@ -2,7 +2,7 @@
 
 import { useLang } from "@/shared/i18n/LanguageProvider";
 import type { Media } from "@/shared/lib/media";
-import { ABOUT_SIZES } from "@/shared/lib/media-sizes";
+import { ABOUT_SIZES, frameRatio } from "@/shared/lib/media-sizes";
 import { Buddy, Cube, Star } from "@/shared/ui/Decor";
 import { MediaView } from "@/shared/ui/MediaView";
 import { Reveal } from "@/shared/ui/Reveal";
@@ -15,14 +15,14 @@ export function About({ media }: { media: Media | null }) {
   return (
     <Section id="about">
       <Container className="grid grid-cols-[0.9fr_1.1fr] items-center gap-14 xl:gap-20">
-        <Reveal className="relative mx-auto w-full max-w-[28rem] short:max-w-[25rem]">
+        <Reveal className="relative mx-auto w-full max-w-[30rem] short:max-w-[27rem]">
           <div aria-hidden="true" className="absolute -inset-3 -rotate-3 pebble bg-sun-soft" />
-          <div className="relative aspect-[4/3.6] overflow-hidden pebble border-[6px] border-paper bg-sky-soft shadow-lift">
+          <div className="relative overflow-hidden pebble border-[6px] border-paper bg-sky-soft shadow-lift" style={{ aspectRatio: frameRatio(media, 4 / 3.6) }}>
             <MediaView media={media} alt={a.photoAlt} sizes={ABOUT_SIZES} placeholder={a.placeholder} />
           </div>
           <Star face className="absolute -top-6 -right-5 w-16 animate-float-slow" />
           <Cube tone="coral" className="absolute -bottom-5 -left-5 w-14 animate-float" />
-          <Buddy shape="circle" tone="sun" className="absolute -right-4 bottom-10 w-12 animate-float" />
+          <Buddy shape="circle" tone="sun" className="absolute -right-6 -bottom-5 w-12 animate-float" />
         </Reveal>
 
         <div>
